@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verdikt — Know what's worth acting on</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #16233B;
+    --green: #2E6B45;
+    --green-light: #EAF3EC;
+    --cream: #FAF9F5;
+    --gold: #B0722A;
+    --berry: #9C3F55;
+    --muted: #6B7280;
+    --text: #22283A;
+    --surface: #FFFFFF;
+    --border: #E3E1D9;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --navy: #E8EAF0;
+      --green: #5FAE7F;
+      --green-light: #16231C;
+      --cream: #12141A;
+      --gold: #D79A52;
+      --berry: #D97C92;
+      --muted: #9AA1AE;
+      --text: #E4E6EB;
+      --surface: #181B22;
+      --border: #2B2F3A;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(70px + env(safe-area-inset-top, 0px)); }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body::before {
+    content: "";
+    position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+    background: var(--cream); z-index: 20;
+  }
+  h1, h2, h3 { font-family: 'Source Serif 4', Georgia, serif; color: var(--navy); line-height: 1.15; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* nav */
+  nav {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+    background: var(--cream); border-bottom: 1px solid var(--border);
+  }
+  .navwrap { max-width: 1100px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; color: var(--navy); }
+  .badge { width: 30px; height: 30px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .badge svg { width: 16px; height: 16px; }
+  .navlinks { display: flex; gap: 28px; font-size: 15px; font-weight: 500; color: var(--text); }
+  .navlinks a:hover { color: var(--green); }
+  .cta-btn {
+    background: var(--green); color: #fff; padding: 10px 20px; border-radius: 6px;
+    font-weight: 600; font-size: 14px; display: inline-block; border: none; cursor: pointer;
+  }
+  .cta-btn:hover { opacity: 0.92; }
+  .menu-toggle { display: none; background: none; border: none; font-size: 24px; color: var(--navy); cursor: pointer; }
+
+  /* hero */
+  .hero { padding: 90px 0 70px; text-align: center; }
+  .eyebrow { color: var(--green); font-weight: 600; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 18px; }
+  .hero h1 { font-size: 52px; max-width: 760px; margin: 0 auto 22px; }
+  .hero p { font-size: 19px; color: var(--muted); max-width: 580px; margin: 0 auto 34px; line-height: 1.6; }
+  .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-secondary {
+    border: 1.5px solid var(--navy); color: var(--navy); padding: 10px 22px; border-radius: 6px;
+    font-weight: 600; font-size: 15px; background: transparent;
+  }
+  .hero .cta-btn { padding: 12px 26px; font-size: 15px; }
+
+  /* example card */
+  .example-card {
+    max-width: 640px; margin: 50px auto 0; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px 30px; text-align: left;
+  }
+  .example-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .score-circle {
+    width: 52px; height: 52px; border-radius: 50%; background: var(--green); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 22px; flex-shrink: 0;
+  }
+  .example-headline { font-weight: 600; font-size: 16px; color: var(--navy); }
+  .example-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .example-reason { font-size: 14.5px; color: var(--text); line-height: 1.6; }
+
+  /* sections */
+  section { padding: 70px 0; }
+  .section-head { text-align: center; max-width: 600px; margin: 0 auto 48px; }
+  .section-head h2 { font-size: 34px; margin-bottom: 14px; }
+  .section-head p { color: var(--muted); font-size: 16px; line-height: 1.6; }
+
+  .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .product-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 30px 26px; }
+  .product-icon { width: 46px; height: 46px; border-radius: 10px; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+  .product-icon svg { width: 22px; height: 22px; stroke: var(--green); }
+  .product-card h3 { font-size: 19px; margin-bottom: 10px; }
+  .product-card p { color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+
+  .about-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+  .about-grid h2 { font-size: 30px; margin-bottom: 18px; }
+  .about-grid p { color: var(--text); font-size: 15.5px; line-height: 1.75; margin-bottom: 16px; }
+  .value-list { list-style: none; }
+  .value-list li { padding: 10px 0 10px 26px; position: relative; font-size: 14.5px; color: var(--text); border-bottom: 1px solid var(--border); }
+  .value-list li:last-child { border-bottom: none; }
+  .value-list li::before { content: "\2013"; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  .value-list strong { color: var(--navy); }
+
+  /* contact */
+  .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+  .contact-form { display: flex; flex-direction: column; gap: 14px; }
+  .contact-form input, .contact-form textarea {
+    padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit;
+    font-size: 14.5px; background: var(--surface); color: var(--text);
+  }
+  .contact-form textarea { min-height: 110px; resize: vertical; }
+  .contact-side h3 { font-size: 20px; margin-bottom: 12px; }
+  .contact-side p { color: var(--muted); font-size: 14.5px; margin-bottom: 20px; line-height: 1.6; }
+  .social-links { display: flex; gap: 14px; flex-wrap: wrap; }
+  .social-links a { border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; font-size: 13.5px; font-weight: 500; }
+  .social-links a:hover { border-color: var(--green); color: var(--green); }
+
+  footer { border-top: 1px solid var(--border); padding: 28px 0; text-align: center; color: var(--muted); font-size: 13px; }
+
+  @media (max-width: 760px) {
+    .navlinks { display: none; }
+    .menu-toggle { display: block; }
+    .navwrap.open ~ .mobile-menu { display: flex; }
+    .hero h1 { font-size: 34px; }
+    .hero p { font-size: 16.5px; }
+    .products-grid { grid-template-columns: 1fr; }
+    .about-grid, .contact-wrap { grid-template-columns: 1fr; gap: 32px; }
+    section { padding: 50px 0; }
+    .hero { padding: 60px 0 40px; }
+  }
+  .mobile-menu {
+    display: none; flex-direction: column; gap: 2px; background: var(--cream);
+    border-bottom: 1px solid var(--border); padding: 8px 24px 16px;
+  }
+  .mobile-menu.show { display: flex; }
+  .mobile-menu a { padding: 12px 0; font-weight: 500; border-bottom: 1px solid var(--border); }
+  .mobile-menu a:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="navwrap">
+    <a href="#home" class="brand">
+      <span class="badge"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      Verdikt
+    </a>
+    <div class="navlinks">
+      <a href="#product">Product</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#contact" class="cta-btn" style="display:none" id="desktop-cta">Try it free</a>
+    <button class="menu-toggle" id="menuBtn" aria-label="Menu">&#9776;</button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#product">Product</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<section class="hero" id="home">
+  <div class="wrap">
+    <div class="eyebrow">AI-powered market signal scoring</div>
+    <h1>Know which market signals are worth acting on.</h1>
+    <p>Verdikt delivers a clear, reasoned verdict on every market signal in seconds — so early-stage founders stop guessing and start deciding.</p>
+    <div class="hero-ctas">
+      <a href="#contact" class="cta-btn">Try it free</a>
+      <a href="#product" class="btn-secondary">See a live example</a>
+    </div>
+
+    <div class="example-card">
+      <div class="example-top">
+        <div class="score-circle">9</div>
+        <div>
+          <div class="example-headline">Xona Space Systems launches commercial GPS alternative</div>
+          <div class="example-sub">Scored by Verdikt in 2.1 seconds</div>
+        </div>
+      </div>
+      <div class="example-reason">This addresses a massive, high-stakes market vulnerability by offering crucial redundancy for autonomous systems and critical infrastructure — a genuine pursuit-worthy signal, not just interesting news.</div>
+    </div>
+  </div>
+</section>
+
+<section id="product">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>One verdict, every signal</h2>
+      <p>No dashboards to parse, no raw data dumps to interpret yourself. Just a clear answer, and the reasoning behind it.</p>
+    </div>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2v6m0 8v6M2 12h6m8 0h6" stroke-linecap="round"/></svg></div>
+        <h3>Paste any signal</h3>
+        <p>Drop in a headline, a funding announcement, or anything you've noticed in the market. No setup, no integration required to start.</p>
+      </div>
+      <div class="product-card">
+        <div class="product-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Get an instant verdict</h3>
+        <p>Our AI scores it 1–10 and explains exactly why, in seconds — the same reasoning an analyst would walk you through.</p>
+      </div>
+      <div class="product-card">
+        <div class="product-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 3v18h18M7 14l4-4 4 4 4-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Track what mattered</h3>
+        <p>Save your scoring history and see which calls actually paid off over time, so your judgment keeps getting sharper.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about-section" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <h2>Built for founders who'd rather decide than guess</h2>
+      <p>Verdikt started as a real, personally-felt problem: founders burning hours scanning funding news with no reliable way to separate a genuine signal from noise. It became a real product once user testing — a founder, an investor, and a salesperson, three unrelated roles — independently converged on wanting the same thing: a clear judgment call, not more data to interpret themselves.</p>
+      <p>We believe founders shouldn't need a research team to make a confident call on a market signal. Information is abundant; judgment is scarce. Verdikt exists to make good judgment accessible to anyone building something new.</p>
+    </div>
+    <div>
+      <h3 style="font-size:16px; color:var(--muted); font-family:'Inter',sans-serif; font-weight:600; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:16px;">What we stand for</h3>
+      <ul class="value-list">
+        <li><strong>Judgment over data dumps</strong> — a verdict with reasoning beats a pile of matches</li>
+        <li><strong>Transparency over confidence theater</strong> — we flag uncertainty instead of hiding it</li>
+        <li><strong>Built for the time-constrained</strong> — every feature has to save a founder real minutes</li>
+        <li><strong>Honest about limits</strong> — we document what the AI gets wrong, not just what it gets right</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap contact-wrap">
+    <div>
+      <div class="section-head" style="text-align:left; margin-bottom:24px;">
+        <h2 style="font-size:28px;">Get your first verdict</h2>
+      </div>
+      <form class="contact-form" onsubmit="event.preventDefault(); alert('Thanks — this is a first-draft form; real submission handling comes in a later iteration.');">
+        <input type="text" placeholder="Your name" required>
+        <input type="email" placeholder="Email address" required>
+        <input type="text" placeholder="What are you building?">
+        <textarea placeholder="Tell us a bit about what you're working on"></textarea>
+        <button type="submit" class="cta-btn" style="margin-top:4px;">Send</button>
+      </form>
+    </div>
+    <div class="contact-side">
+      <h3>Prefer to connect elsewhere?</h3>
+      <p>Verdikt is an early-stage project — the fastest way to reach us right now is through the communities where founders already are.</p>
+      <div class="social-links">
+        <a href="#">Indie Hackers</a>
+        <a href="#">X / Twitter</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Verdikt — a reasoned score, not just more data.</div>
+</footer>
+
+<script>
+  document.getElementById('menuBtn').addEventListener('click', function() {
+    document.getElementById('mobileMenu').classList.toggle('show');
+  });
+  document.querySelectorAll('.mobile-menu a').forEach(function(a) {
+    a.addEventListener('click', function() { document.getElementById('mobileMenu').classList.remove('show'); });
+  });
+</script>
+
+</body>
+</html>
